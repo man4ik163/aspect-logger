@@ -12,25 +12,25 @@ import org.aspectj.lang.reflect.MethodSignature;
 public class LoggingAspect {
 
     private static final String WHITE_SPACE = " ";
-    private static final String START = "start";
-    private static final String END = "end";
+    private static final String IN = "in";
+    private static final String OUT = "out";
     private static final String DOT = ".";
     private static final String COMMA = ",";
     private static final String LEFT_BRACKET = "[";
     private static final String RIGHT_BRACKET = "]";
     private static final String EQUAL_SIGN = "=";
 
-    @Around("@annotation(ToLog)")
+    @Around("@annotation(Logging)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         Object[] arguments = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        Object[] parameters = method.getParameters();
+        Object[] parameterNames = signature.getParameterNames();
         String methodName = method.getName();
         String simpleClassName = method.getDeclaringClass().getSimpleName();
-        boolean isDebug = method.getAnnotation(ToLog.class).isDebug();
+        boolean isDebug = method.getAnnotation(Logging.class).isDebug();
 
-        String startLog = appendStartLog(arguments, parameters, methodName, simpleClassName);
+        String startLog = appendStartLog(arguments, parameterNames, methodName, simpleClassName);
         log(startLog, isDebug);
 
         Object proceed = joinPoint.proceed();
@@ -48,25 +48,26 @@ public class LoggingAspect {
         }
     }
 
-    private String appendStartLog(Object[] arguments, Object[] parameters, String methodName, String simpleClassName) {
+    private String appendStartLog(Object[] arguments, Object[] parameterNames, String methodName, String simpleClassName) {
         StringBuffer resultLog = new StringBuffer();
-        resultLog.append(START);
+        resultLog.append(IN);
         resultLog.append(WHITE_SPACE);
         resultLog.append(simpleClassName);
         resultLog.append(DOT);
         resultLog.append(methodName);
         int countArguments;
-        if (arguments.length != parameters.length) {
+        if (arguments.length != parameterNames.length || arguments.length == 0 || parameterNames.length == 0) {
             return resultLog.toString();
         }
         countArguments = arguments.length;
         resultLog.append(LEFT_BRACKET);
         for (int i = 0; i < countArguments; i++) {
-            resultLog.append(arguments[i]);
+            resultLog.append(parameterNames[i]);
             resultLog.append(EQUAL_SIGN);
-            resultLog.append(parameters[i]);
+            resultLog.append(arguments[i]);
             if (i < countArguments - 1) {
                 resultLog.append(COMMA);
+                resultLog.append(WHITE_SPACE);
             }
         }
         resultLog.append(RIGHT_BRACKET);
@@ -75,7 +76,7 @@ public class LoggingAspect {
 
     private String appendEndLog(Object proceed, String methodName, String simpleClassName) {
         StringBuffer resultLog = new StringBuffer();
-        resultLog.append(END);
+        resultLog.append(OUT);
         resultLog.append(WHITE_SPACE);
         resultLog.append(simpleClassName);
         resultLog.append(DOT);
