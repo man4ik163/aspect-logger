@@ -11,7 +11,7 @@
 
 	<groupId>ru.simankin</groupId>
 	<artifactId>aspect-logger</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>aspect-logging</name>
 	<description>Project for logging</description>
 
