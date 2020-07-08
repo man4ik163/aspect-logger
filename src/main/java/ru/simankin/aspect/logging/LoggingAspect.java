@@ -30,12 +30,12 @@ public class LoggingAspect {
         String simpleClassName = method.getDeclaringClass().getSimpleName();
         boolean isDebug = method.getAnnotation(Logging.class).isDebug();
 
-        String startLog = appendStartLog(arguments, parameterNames, methodName, simpleClassName);
+        String startLog = appendInLog(arguments, parameterNames, methodName, simpleClassName);
         log(startLog, isDebug);
 
         Object proceed = joinPoint.proceed();
 
-        String endLog = appendEndLog(proceed, methodName, simpleClassName);
+        String endLog = appendOutLog(proceed, methodName, simpleClassName);
         log(endLog, isDebug);
         return proceed;
     }
@@ -48,13 +48,13 @@ public class LoggingAspect {
         }
     }
 
-    private String appendStartLog(Object[] arguments, Object[] parameterNames, String methodName, String simpleClassName) {
-        StringBuffer resultLog = new StringBuffer();
-        resultLog.append(IN);
-        resultLog.append(WHITE_SPACE);
-        resultLog.append(simpleClassName);
-        resultLog.append(DOT);
-        resultLog.append(methodName);
+    private String appendInLog(Object[] arguments, Object[] parameterNames, String methodName, String simpleClassName) {
+        StringBuilder resultLog = new StringBuilder();
+        resultLog.append(IN)
+                .append(WHITE_SPACE)
+                .append(simpleClassName)
+                .append(DOT)
+                .append(methodName);
         int countArguments;
         if (arguments.length != parameterNames.length || arguments.length == 0 || parameterNames.length == 0) {
             return resultLog.toString();
@@ -62,31 +62,31 @@ public class LoggingAspect {
         countArguments = arguments.length;
         resultLog.append(LEFT_BRACKET);
         for (int i = 0; i < countArguments; i++) {
-            resultLog.append(parameterNames[i]);
-            resultLog.append(EQUAL_SIGN);
-            resultLog.append(arguments[i]);
+            resultLog.append(parameterNames[i])
+                    .append(EQUAL_SIGN)
+                    .append(arguments[i]);
             if (i < countArguments - 1) {
-                resultLog.append(COMMA);
-                resultLog.append(WHITE_SPACE);
+                resultLog.append(COMMA)
+                        .append(WHITE_SPACE);
             }
         }
         resultLog.append(RIGHT_BRACKET);
         return resultLog.toString();
     }
 
-    private String appendEndLog(Object proceed, String methodName, String simpleClassName) {
-        StringBuffer resultLog = new StringBuffer();
-        resultLog.append(OUT);
-        resultLog.append(WHITE_SPACE);
-        resultLog.append(simpleClassName);
-        resultLog.append(DOT);
-        resultLog.append(methodName);
+    private String appendOutLog(Object proceed, String methodName, String simpleClassName) {
+        StringBuilder resultLog = new StringBuilder();
+        resultLog.append(OUT)
+                .append(WHITE_SPACE)
+                .append(simpleClassName)
+                .append(DOT)
+                .append(methodName);
         if (proceed == null) {
             return resultLog.toString();
         }
-        resultLog.append(LEFT_BRACKET);
-        resultLog.append(proceed);
-        resultLog.append(RIGHT_BRACKET);
+        resultLog.append(LEFT_BRACKET)
+                .append(proceed)
+                .append(RIGHT_BRACKET);
         return resultLog.toString();
     }
 }
