@@ -13,9 +13,9 @@ import ru.simankin.aspect.logging.annotation.Logging;
 public class LoggingAspect {
 
     private static final String WHITE_SPACE = " ";
-    private static final String IN = "in";
-    private static final String OUT = "out";
-    private static final String ERROR = "error";
+    private static final String IN = "IN";
+    private static final String OUT = "OUT";
+    private static final String ERROR = "ERROR";
     private static final String DOT = ".";
     private static final String COMMA = ",";
     private static final String LEFT_BRACKET = "[";
@@ -59,11 +59,11 @@ public class LoggingAspect {
 
     private String appendInLog(Object[] arguments, Object[] parameterNames, String methodName, String simpleClassName) {
         StringBuilder resultLog = new StringBuilder();
-        resultLog.append(IN)
-                .append(WHITE_SPACE)
-                .append(simpleClassName)
+        resultLog.append(simpleClassName)
                 .append(DOT)
-                .append(methodName);
+                .append(methodName)
+                .append(DOT)
+                .append(IN);
         int countArguments;
 
         if (arguments.length == 0 || parameterNames.length == 0 || arguments.length != parameterNames.length) {
@@ -89,11 +89,11 @@ public class LoggingAspect {
 
     private String appendOutLog(Object proceed, String methodName, String simpleClassName) {
         StringBuilder resultLog = new StringBuilder();
-        resultLog.append(OUT)
-                .append(WHITE_SPACE)
-                .append(simpleClassName)
+        resultLog.append(simpleClassName)
                 .append(DOT)
-                .append(methodName);
+                .append(methodName)
+                .append(DOT)
+                .append(OUT);
 
         if (proceed == null) {
             return resultLog.toString();
@@ -108,11 +108,11 @@ public class LoggingAspect {
 
     private String appendErrorLog(String methodName, String simpleClassName, Throwable e) {
         StringBuilder resultLog = new StringBuilder();
-        resultLog.append(ERROR)
-                .append(WHITE_SPACE)
-                .append(simpleClassName)
+        resultLog.append(simpleClassName)
                 .append(DOT)
                 .append(methodName)
+                .append(DOT)
+                .append(ERROR)
                 .append(WHITE_SPACE)
                 .append(e);
 
